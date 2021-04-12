@@ -1,28 +1,19 @@
 package session
 
 import (
-	"github.com/xeoncross/gohttpsession/sessiontoken"
 	"net/http"
+
+	"github.com/xeoncross/gohttpsession/sessiontoken"
 )
 
-// ID of a session
-// type ID []byte
-// We don't use this because we store the ID as a []byte slice
-// (regardless of storage system: redis/mysql/mongo/dynamo/etc..)
-// so using this alias would just result in more type conversions
-// without providing type safety since we don't know the length
-// that you will be using
-
-// yeah, you thought I didn't see you there didn't you?
-
-// Proxy instance for reading and writing sessions to HTTP clients
-type Proxy struct {
+// CookieProxy for reading and writing session cookies to HTTP clients
+type CookieProxy struct {
 	BaseCookie http.Cookie
 	IDLength   int
 }
 
 // Load session ID (if exists)
-func (p *Proxy) Load(r *http.Request) []byte {
+func (p *CookieProxy) Load(r *http.Request) []byte {
 
 	sessionCookie, err := r.Cookie(p.BaseCookie.Name)
 	if err != nil {
@@ -40,7 +31,7 @@ func (p *Proxy) Load(r *http.Request) []byte {
 }
 
 // Start a new session by sending a cookie with the new session ID to the client
-func (p *Proxy) Start(w http.ResponseWriter) []byte {
+func (p *CookieProxy) Start(w http.ResponseWriter) []byte {
 	cookie := p.BaseCookie
 	id := sessiontoken.New(p.IDLength)
 	cookie.Value = sessiontoken.Encode(id)

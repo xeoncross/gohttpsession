@@ -1,17 +1,17 @@
 package session_test
 
 import (
-	session "github.com/xeoncross/gohttpsession"
-	"github.com/xeoncross/gohttpsession/sessiontoken"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	session "github.com/xeoncross/gohttpsession"
+	"github.com/xeoncross/gohttpsession/sessiontoken"
 )
 
 func TestProxy(t *testing.T) {
 
-	proxy := &session.Proxy{
+	proxy := &session.CookieProxy{
 		BaseCookie: http.Cookie{
 			Name:     "session",
 			HttpOnly: true,
